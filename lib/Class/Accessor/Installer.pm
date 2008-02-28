@@ -3,9 +3,10 @@ package Class::Accessor::Installer;
 use warnings;
 use strict;
 use Sub::Name;
+use UNIVERSAL::require;
 
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 
 sub install_accessor {
@@ -22,6 +23,23 @@ sub install_accessor {
     for my $sub (@$name) {
         no strict 'refs';
         *{"${pkg}::${sub}"} = subname "${pkg}::${sub}" => $code;
+
+        for my $doc_type (qw(purpose example)) {
+            next unless defined $args{$doc_type};
+
+            # don't use() it - this installer should still work if we don't
+            # have Pod::Generated
+
+            Pod::Generated->require;
+            next if $@;
+
+            my $spec = $args{$doc_type};
+            $spec = [ $spec ] unless ref $spec eq 'ARRAY';
+            for my $doc_el (@$spec) {
+                $doc_el =~ s/^\s*|\s*$//sg;
+                Pod::Generated::add_doc($pkg, 'CODE', $sub, $doc_type, $doc_el);
+            }
+        }
     }
 }
 
@@ -29,6 +47,8 @@ sub install_accessor {
 1;
 
 __END__
+
+
 
 =head1 NAME
 
@@ -46,8 +66,13 @@ Class::Accessor::Installer - install an accessor subroutine
 
         for my $field (@fields) {
             $self->install_accessor(
-                sub  => "${field}_foo",
-                code => sub { ... },
+                sub     => "${field}_foo",
+                code    => sub { ... },
+                purpose => 'Does this, that and the other',
+                example => [
+                    "my \$result = $class->${field}_foo(\$value)",
+                    "my \$result = $class->${field}_foo(\$value, \$value2)",
+                }
             );
         }
 
@@ -108,6 +133,18 @@ An example of this usage would be:
 
 This is the code reference that should be installed.
 
+=item purpose
+
+A string describing the generated method. This information can be used by
+L<Pod::Generated> to automatically generate pod documentation during C<make>
+time.
+
+=item example
+
+One or more examples of using the method. These will also be used in the
+generated documentation. The value can be a string or an reference to an array
+of strings.
+
 =back
 
 The installed subroutine is named using L<Sub::Name>, so it shows up with a
@@ -118,10 +155,9 @@ therefore want to use the following lines at the beginning of your subroutine:
         $self->install_accessor(
             name => $field,
             code => sub {
-                local $DB::sub = local *__ANON__ = "${class}::${name}"
+                local $DB::sub = local *__ANON__ = "${class}::${field}"
                     if defined &DB::DB && !$Devel::DProf::VERSION;
                 ...
-            }
         );
 
 Now the subroutine will be named both in a stack trace and inside the
@@ -134,12 +170,16 @@ debugger.
 If you talk about this module in blogs, on del.icio.us or anywhere else,
 please use the C<classaccessorinstaller> tag.
 
+=head1 VERSION 
+                   
+This document describes version 0.02 of L<Class::Accessor::Installer>.
+
 =head1 BUGS AND LIMITATIONS
 
 No bugs have been reported.
 
 Please report any bugs or feature requests to
-C<bug-class-accessor-installer@rt.cpan.org>, or through the web interface at
+C<<bug-class-accessor-installer@rt.cpan.org>>, or through the web interface at
 L<http://rt.cpan.org>.
 
 =head1 INSTALLATION
@@ -158,10 +198,11 @@ Marcel GrE<uuml>nauer, C<< <marcel@cpan.org> >>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2007 by Marcel GrE<uuml>nauer
+Copyright 2007-2008 by Marcel GrE<uuml>nauer
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
+
 
 =cut
 
