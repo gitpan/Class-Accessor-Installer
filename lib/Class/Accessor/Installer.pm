@@ -4,9 +4,10 @@ use warnings;
 use strict;
 use Sub::Name;
 use UNIVERSAL::require;
+use Vim::Tag 'make_tag';
 
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 
 sub install_accessor {
@@ -27,11 +28,10 @@ sub install_accessor {
             while $caller[0] =~ /^Class(::\w+)*::Accessor::/o;
     }
 
-
     for my $sub (@$name) {
         no strict 'refs';
 
-        printf "%s\t%s\t%s\n", $sub, @caller[1,2] if $::PTAGS;
+        make_tag($sub, $caller[1], $caller[2]);
         *{"${pkg}::${sub}"} = subname "${pkg}::${sub}" => $code;
 
         for my $doc_type (qw(purpose example)) {

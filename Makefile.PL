@@ -7,6 +7,7 @@ perl_version '5.006';
 
 requires 'Sub::Name';
 requires 'UNIVERSAL::require';
+requires 'Vim::Tag';
 
 feature 'Generated documentation',
     - default => 1,

@@ -1,6 +1,9 @@
 Revision history for Perl extension Class-Accessor-Installer
 
-0.04 Thu Oct 30 16:23:28 CET 2008 (Marcel Gruenauer <marcel@cpan.org>)
+0.05  Sat Nov  1 22:01:44 CET 2008 (Marcel Gruenauer <marcel@cpan.org>)
+     - Now uses Vim::Tag
+
+0.04  Thu Oct 30 16:23:28 CET 2008 (Marcel Gruenauer <marcel@cpan.org>)
      - Generate ptags if $::PTAGS is set (Florian Helmberger)
 
 0.03  Thu Jul 25 15:27:43 CEST 2008 (Marcel Gruenauer <marcel@cpan.org>)
