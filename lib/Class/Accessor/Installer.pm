@@ -6,7 +6,7 @@ use Sub::Name;
 use UNIVERSAL::require;
 
 
-our $VERSION = '0.02';
+our $VERSION = '0.04';
 
 
 sub install_accessor {
@@ -20,8 +20,18 @@ sub install_accessor {
 
     $name = [ $name ] unless ref $name eq 'ARRAY';
 
+    my @caller;
+    if ($::PTAGS) {
+        my $level = 1;
+        do { @caller = caller($level++) } 
+            while $caller[0] =~ /^Class(::\w+)*::Accessor::/o;
+    }
+
+
     for my $sub (@$name) {
         no strict 'refs';
+
+        printf "%s\t%s\t%s\n", $sub, @caller[1,2] if $::PTAGS;
         *{"${pkg}::${sub}"} = subname "${pkg}::${sub}" => $code;
 
         for my $doc_type (qw(purpose example)) {
@@ -165,21 +175,11 @@ debugger.
 
 =back
 
-=head1 TAGS
-
-If you talk about this module in blogs, on del.icio.us or anywhere else,
-please use the C<classaccessorinstaller> tag.
-
-=head1 VERSION 
-                   
-This document describes version 0.02 of L<Class::Accessor::Installer>.
-
 =head1 BUGS AND LIMITATIONS
 
 No bugs have been reported.
 
-Please report any bugs or feature requests to
-C<<bug-class-accessor-installer@rt.cpan.org>>, or through the web interface at
+Please report any bugs or feature requests through the web interface at
 L<http://rt.cpan.org>.
 
 =head1 INSTALLATION
@@ -192,13 +192,15 @@ The latest version of this module is available from the Comprehensive Perl
 Archive Network (CPAN). Visit <http://www.perl.com/CPAN/> to find a CPAN
 site near you. Or see <http://www.perl.com/CPAN/authors/id/M/MA/MARCEL/>.
 
-=head1 AUTHOR
+=head1 AUTHORS
 
 Marcel GrE<uuml>nauer, C<< <marcel@cpan.org> >>
 
+Florian Helmberger, C<< <florian@cpan.org> >>
+
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2007-2008 by Marcel GrE<uuml>nauer
+Copyright 2007-2008 by the authors.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
