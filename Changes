@@ -1,5 +1,10 @@
 Revision history for Perl extension Class-Accessor-Installer
 
+0.06 Sun 2009.12.06 23:41:53 CET (Marcel Gruenauer <marcel@cpan.org>)
+     - Vim::Tag is now an optional feature
+     - reduced dependencies using author tests
+     - better dist engineering (INSTALL, README, README.mkdn etc.)
+
 0.05  Sat Nov  1 22:01:44 CET 2008 (Marcel Gruenauer <marcel@cpan.org>)
      - Now uses Vim::Tag
 

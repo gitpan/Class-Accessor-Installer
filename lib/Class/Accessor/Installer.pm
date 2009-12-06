@@ -1,50 +1,42 @@
 package Class::Accessor::Installer;
-
+use 5.006;
 use warnings;
 use strict;
 use Sub::Name;
 use UNIVERSAL::require;
-use Vim::Tag 'make_tag';
-
-
-our $VERSION = '0.05';
-
+our $VERSION = '0.06';
 
 sub install_accessor {
     my ($self, %args) = @_;
-
-    my ($pkg, $name, $code) = @args{ qw/pkg name code/ };
-
+    my ($pkg, $name, $code) = @args{qw/pkg name code/};
     unless (defined $pkg) {
         $pkg = ref $self || $self;
     }
-
-    $name = [ $name ] unless ref $name eq 'ARRAY';
-
+    $name = [$name] unless ref $name eq 'ARRAY';
     my @caller;
     if ($::PTAGS) {
         my $level = 1;
-        do { @caller = caller($level++) } 
-            while $caller[0] =~ /^Class(::\w+)*::Accessor::/o;
+        do { @caller = caller($level++) }
+          while $caller[0] =~ /^Class(::\w+)*::Accessor::/o;
     }
-
     for my $sub (@$name) {
         no strict 'refs';
 
-        make_tag($sub, $caller[1], $caller[2]);
+        # optional feature
+        Vim::Tag->require;
+        unless ($@) {
+            Vim::Tag::make_tag($sub, $caller[1], $caller[2]);
+        }
         *{"${pkg}::${sub}"} = subname "${pkg}::${sub}" => $code;
-
         for my $doc_type (qw(purpose example)) {
             next unless defined $args{$doc_type};
 
             # don't use() it - this installer should still work if we don't
             # have Pod::Generated
-
             Pod::Generated->require;
             next if $@;
-
             my $spec = $args{$doc_type};
-            $spec = [ $spec ] unless ref $spec eq 'ARRAY';
+            $spec = [$spec] unless ref $spec eq 'ARRAY';
             for my $doc_el (@$spec) {
                 $doc_el =~ s/^\s*|\s*$//sg;
                 Pod::Generated::add_doc($pkg, 'CODE', $sub, $doc_type, $doc_el);
@@ -52,17 +44,12 @@ sub install_accessor {
         }
     }
 }
-
-
 1;
-
 __END__
-
-
 
 =head1 NAME
 
-Class::Accessor::Installer - install an accessor subroutine
+Class::Accessor::Installer - Install an accessor subroutine
 
 =head1 SYNOPSIS
 
@@ -77,17 +64,15 @@ Class::Accessor::Installer - install an accessor subroutine
         for my $field (@fields) {
             $self->install_accessor(
                 sub     => "${field}_foo",
-                code    => sub { ... },
+                code    => sub { rand() },
                 purpose => 'Does this, that and the other',
                 example => [
                     "my \$result = $class->${field}_foo(\$value)",
                     "my \$result = $class->${field}_foo(\$value, \$value2)",
-                }
+                ]
             );
         }
-
     }
-
 
 =head1 DESCRIPTION
 
@@ -102,13 +87,13 @@ inherit from this class.
 
 =over 4
 
-=item install_accessor
+=item C<install_accessor>
 
 Takes as arguments a named hash. The following keys are recognized:
 
 =over 4
 
-=item pkg
+=item C<pkg>
 
 The package into which to install the subroutine. If this argument is omitted,
 it will inspect C<$self> to determine the package. Class::Accessor::*
@@ -121,7 +106,7 @@ accessor generators are typically used like this:
 Therefore C<install_accessor()> can determine the right package into which to
 install the subroutine.
 
-=item name
+=item C<name>
 
 The name or names to use for the subroutine. You can either pass a single
 string or a reference to an array of strings. Each string is interpreted as a
@@ -139,17 +124,17 @@ An example of this usage would be:
             code => sub { ... }
         );
 
-=item code
+=item C<code>
 
 This is the code reference that should be installed.
 
-=item purpose
+=item C<purpose>
 
 A string describing the generated method. This information can be used by
 L<Pod::Generated> to automatically generate pod documentation during C<make>
 time.
 
-=item example
+=item C<example>
 
 One or more examples of using the method. These will also be used in the
 generated documentation. The value can be a string or an reference to an array
@@ -190,7 +175,7 @@ See perlmodinstall for information and options on installing Perl modules.
 
 The latest version of this module is available from the Comprehensive Perl
 Archive Network (CPAN). Visit <http://www.perl.com/CPAN/> to find a CPAN
-site near you. Or see <http://www.perl.com/CPAN/authors/id/M/MA/MARCEL/>.
+site near you. Or see L<http://search.cpan.org/dist/Class-Accessor-Installer/>.
 
 =head1 AUTHORS
 
@@ -200,11 +185,9 @@ Florian Helmberger, C<< <florian@cpan.org> >>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2007-2008 by the authors.
+Copyright 2007-2009 by the authors.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
-
 =cut
-
