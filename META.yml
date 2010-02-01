@@ -28,4 +28,4 @@ resources:
   homepage: http://search.cpan.org/dist/Class-Accessor-Installer/
   license: http://dev.perl.org/licenses/
   repository: git://github.com/hanekomu/class-accessor-installer.git
-version: 0.06
+version: 0.07

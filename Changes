@@ -1,5 +1,8 @@
 Revision history for Perl extension Class-Accessor-Installer
 
+0.07 Mon 2010.02.01 22:38:08 CET (Marcel Gruenauer <marcel@cpan.org>)
+     - convert to new-style PTAGS handling (see Vim::Tag)
+
 0.06 Sun 2009.12.06 23:41:53 CET (Marcel Gruenauer <marcel@cpan.org>)
      - Vim::Tag is now an optional feature
      - reduced dependencies using author tests

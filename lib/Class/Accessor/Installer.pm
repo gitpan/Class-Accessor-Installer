@@ -4,7 +4,7 @@ use warnings;
 use strict;
 use Sub::Name;
 use UNIVERSAL::require;
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 sub install_accessor {
     my ($self, %args) = @_;
@@ -22,11 +22,7 @@ sub install_accessor {
     for my $sub (@$name) {
         no strict 'refs';
 
-        # optional feature
-        Vim::Tag->require;
-        unless ($@) {
-            Vim::Tag::make_tag($sub, $caller[1], $caller[2]);
-        }
+        $::PTAGS && $::PTAGS->add_tag($sub, $caller[1], $caller[2]);
         *{"${pkg}::${sub}"} = subname "${pkg}::${sub}" => $code;
         for my $doc_type (qw(purpose example)) {
             next unless defined $args{$doc_type};

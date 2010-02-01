@@ -12,7 +12,7 @@ requires 'UNIVERSAL::require';
 feature 'Generated documentation', - default => 1,
   'Pod::Generated' => '0.02';
 feature 'Vim tags', - default => 1,
-  'Vim::Tag'               => '0.02';
+  'Vim::Tag'               => '0.04';
 test_requires 'Test::More' => '0.70';
 extra_tests;
 author_requires 'ShipIt';
