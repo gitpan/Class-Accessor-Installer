@@ -5,7 +5,7 @@ use Test::More tests => 3;
 
 # taken from Class::Accessor::Complex
 package Foo;
-use base qw(Class::Accessor Class::Accessor::Installer);
+use base qw(Class::Accessor::Installer);
 
 sub mk_new {
     my ($self, @args) = @_;

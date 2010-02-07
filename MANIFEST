@@ -27,6 +27,7 @@ MANIFEST			This list of files
 META.yml
 README
 README.mkdn
+t/00_versions.t
 t/01_misc.t
 xt/author/00_compile.t
 xt/author/01_perl_critic.t

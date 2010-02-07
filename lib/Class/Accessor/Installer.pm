@@ -4,7 +4,7 @@ use warnings;
 use strict;
 use Sub::Name;
 use UNIVERSAL::require;
-our $VERSION = '0.07';
+our $VERSION = '0.08';
 
 sub install_accessor {
     my ($self, %args) = @_;
