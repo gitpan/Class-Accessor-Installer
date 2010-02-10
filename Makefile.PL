@@ -11,8 +11,6 @@ requires 'Sub::Name';
 requires 'UNIVERSAL::require';
 feature 'Generated documentation', - default => 1,
   'Pod::Generated' => '0.02';
-feature 'Vim tags', - default => 1,
-  'Vim::Tag'               => '0.04';
 test_requires 'Test::More' => '0.70';
 extra_tests;
 author_requires 'ShipIt';
@@ -27,10 +25,14 @@ author_requires 'Test::Spelling';
 author_requires 'Pod::Wordlist::hanekomu';
 author_requires 'Test::Pod::Coverage';
 
-# author_requires 'Test::Kwalitee';   # Attempt to free unreferenced scalar
+# author_requires 'Test::Kwalitee';
 author_requires 'Test::YAML::Meta';
 author_requires 'Test::Portability::Files';
 author_requires 'Test::Synopsis';
+author_requires 'Test::MinimumVersion';
+author_requires 'Test::HasVersion';
+author_requires 'Test::CheckChanges';
+author_requires 'Test::DistManifest';
 auto_install;
 auto_include;
 WriteAll;

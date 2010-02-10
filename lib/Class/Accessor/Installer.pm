@@ -4,7 +4,7 @@ use warnings;
 use strict;
 use Sub::Name;
 use UNIVERSAL::require;
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 
 sub install_accessor {
     my ($self, %args) = @_;
@@ -21,7 +21,6 @@ sub install_accessor {
     }
     for my $sub (@$name) {
         no strict 'refs';
-
         $::PTAGS && $::PTAGS->add_tag($sub, $caller[1], $caller[2]);
         *{"${pkg}::${sub}"} = subname "${pkg}::${sub}" => $code;
         for my $doc_type (qw(purpose example)) {

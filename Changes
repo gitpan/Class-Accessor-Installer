@@ -1,5 +1,11 @@
 Revision history for Perl extension Class-Accessor-Installer
 
+0.09 Wed 2010.02.10 14:34:59 CET (Marcel Gruenauer <marcel@cpan.org>)
+     - removed optional but - after the Vim::Tag rewrite unnecessary - Vim::Tag
+       dependency, thereby also removing the circular dependency of Vim::Tag ->
+       Class::Accessor::Constructor -> Class::Accessor::Complex ->
+       Class::Accessor::Installer.
+
 0.08 Sun 2010.02.07 22:20:43 CET (Marcel Gruenauer <marcel@cpan.org>)
      - removed test dependency on Class::Accessor - works fine without it
 
