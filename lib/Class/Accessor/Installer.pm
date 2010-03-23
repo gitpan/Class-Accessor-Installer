@@ -1,10 +1,12 @@
-package Class::Accessor::Installer;
 use 5.006;
 use warnings;
 use strict;
+
+package Class::Accessor::Installer;
+our $VERSION = '1.100820';
+# ABSTRACT: Install an accessor subroutine
 use Sub::Name;
 use UNIVERSAL::require;
-our $VERSION = '0.09';
 
 sub install_accessor {
     my ($self, %args) = @_;
@@ -40,11 +42,18 @@ sub install_accessor {
     }
 }
 1;
+
+
 __END__
+=pod
 
 =head1 NAME
 
 Class::Accessor::Installer - Install an accessor subroutine
+
+=head1 VERSION
+
+version 1.100820
 
 =head1 SYNOPSIS
 
@@ -78,11 +87,9 @@ of L<Class::Accessor::Complex> and friends.
 It is intended as a mixin, that is, your accessor-generating class should
 inherit from this class.
 
-=head2 METHODS
+=head1 METHODS
 
-=over 4
-
-=item C<install_accessor>
+=head2 install_accessor
 
 Takes as arguments a named hash. The following keys are recognized:
 
@@ -153,36 +160,40 @@ therefore want to use the following lines at the beginning of your subroutine:
 Now the subroutine will be named both in a stack trace and inside the
 debugger.
 
-=back
+=head1 INSTALLATION
+
+See perlmodinstall for information and options on installing Perl modules.
 
 =head1 BUGS AND LIMITATIONS
 
 No bugs have been reported.
 
 Please report any bugs or feature requests through the web interface at
-L<http://rt.cpan.org>.
-
-=head1 INSTALLATION
-
-See perlmodinstall for information and options on installing Perl modules.
+L<http://rt.cpan.org/Public/Dist/Display.html?Name=Class-Accessor-Installer>.
 
 =head1 AVAILABILITY
 
 The latest version of this module is available from the Comprehensive Perl
-Archive Network (CPAN). Visit <http://www.perl.com/CPAN/> to find a CPAN
-site near you. Or see L<http://search.cpan.org/dist/Class-Accessor-Installer/>.
+Archive Network (CPAN). Visit L<http://www.perl.com/CPAN/> to find a CPAN
+site near you, or see
+L<http://search.cpan.org/dist/Class-Accessor-Installer/>.
+
+The development version lives at
+L<http://github.com/hanekomu/Class-Accessor-Installer/>.
+Instead of sending patches, please fork this project using the standard git
+and github infrastructure.
 
 =head1 AUTHORS
 
-Marcel GrE<uuml>nauer, C<< <marcel@cpan.org> >>
-
-Florian Helmberger, C<< <florian@cpan.org> >>
+  Marcel Gruenauer <marcel@cpan.org>
+  Florian Helmberger <florian@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2007-2009 by the authors.
+This software is copyright (c) 2007 by Marcel Gruenauer.
 
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
 
 =cut
+

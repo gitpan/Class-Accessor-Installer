@@ -1,6 +1,9 @@
 NAME
     Class::Accessor::Installer - Install an accessor subroutine
 
+VERSION
+    version 1.100820
+
 SYNOPSIS
         package Class::Accessor::Foo;
 
@@ -31,96 +34,99 @@ DESCRIPTION
     It is intended as a mixin, that is, your accessor-generating class
     should inherit from this class.
 
-  METHODS
-    "install_accessor"
-        Takes as arguments a named hash. The following keys are recognized:
+METHODS
+  install_accessor
+    Takes as arguments a named hash. The following keys are recognized:
 
-        "pkg"
-            The package into which to install the subroutine. If this
-            argument is omitted, it will inspect $self to determine the
-            package. Class::Accessor::* accessor generators are typically
-            used like this:
+    "pkg"
+        The package into which to install the subroutine. If this argument
+        is omitted, it will inspect $self to determine the package.
+        Class::Accessor::* accessor generators are typically used like this:
 
-                __PACKAGE__
-                    ->mk_new
-                    ->mk_array_accessors(qw(foo bar));
+            __PACKAGE__
+                ->mk_new
+                ->mk_array_accessors(qw(foo bar));
 
-            Therefore "install_accessor()" can determine the right package
-            into which to install the subroutine.
+        Therefore "install_accessor()" can determine the right package into
+        which to install the subroutine.
 
-        "name"
-            The name or names to use for the subroutine. You can either pass
-            a single string or a reference to an array of strings. Each
-            string is interpreted as a subroutine name inside the given
-            package, and the code reference is installed into the
-            appropriate typeglob.
+    "name"
+        The name or names to use for the subroutine. You can either pass a
+        single string or a reference to an array of strings. Each string is
+        interpreted as a subroutine name inside the given package, and the
+        code reference is installed into the appropriate typeglob.
 
-            Why would you want to install a subroutine in more than one
-            place inside your package? For example, Class::Accessor::Complex
-            often creates aliases so the user can choose the version of the
-            name that reads more naturally.
+        Why would you want to install a subroutine in more than one place
+        inside your package? For example, Class::Accessor::Complex often
+        creates aliases so the user can choose the version of the name that
+        reads more naturally.
 
-            An example of this usage would be:
-
-                    $self->install_accessor(
-                        name => [ "clear_${field}", "${field}_clear" ],
-                        code => sub { ... }
-                    );
-
-        "code"
-            This is the code reference that should be installed.
-
-        "purpose"
-            A string describing the generated method. This information can
-            be used by Pod::Generated to automatically generate pod
-            documentation during "make" time.
-
-        "example"
-            One or more examples of using the method. These will also be
-            used in the generated documentation. The value can be a string
-            or an reference to an array of strings.
-
-        The installed subroutine is named using Sub::Name, so it shows up
-        with a meaningful name in stack traces (instead of as "__ANON__").
-        However, the inside the debugger, the subroutine still shows up as
-        "__ANON__". You might therefore want to use the following lines at
-        the beginning of your subroutine:
+        An example of this usage would be:
 
                 $self->install_accessor(
-                    name => $field,
-                    code => sub {
-                        local $DB::sub = local *__ANON__ = "${class}::${field}"
-                            if defined &DB::DB && !$Devel::DProf::VERSION;
-                        ...
+                    name => [ "clear_${field}", "${field}_clear" ],
+                    code => sub { ... }
                 );
 
-        Now the subroutine will be named both in a stack trace and inside
-        the debugger.
+    "code"
+        This is the code reference that should be installed.
 
-BUGS AND LIMITATIONS
-    No bugs have been reported.
+    "purpose"
+        A string describing the generated method. This information can be
+        used by Pod::Generated to automatically generate pod documentation
+        during "make" time.
 
-    Please report any bugs or feature requests through the web interface at
-    <http://rt.cpan.org>.
+    "example"
+        One or more examples of using the method. These will also be used in
+        the generated documentation. The value can be a string or an
+        reference to an array of strings.
+
+    The installed subroutine is named using Sub::Name, so it shows up with a
+    meaningful name in stack traces (instead of as "__ANON__"). However, the
+    inside the debugger, the subroutine still shows up as "__ANON__". You
+    might therefore want to use the following lines at the beginning of your
+    subroutine:
+
+            $self->install_accessor(
+                name => $field,
+                code => sub {
+                    local $DB::sub = local *__ANON__ = "${class}::${field}"
+                        if defined &DB::DB && !$Devel::DProf::VERSION;
+                    ...
+            );
+
+    Now the subroutine will be named both in a stack trace and inside the
+    debugger.
 
 INSTALLATION
     See perlmodinstall for information and options on installing Perl
     modules.
 
+BUGS AND LIMITATIONS
+    No bugs have been reported.
+
+    Please report any bugs or feature requests through the web interface at
+    <http://rt.cpan.org/Public/Dist/Display.html?Name=Class-Accessor-Install
+    er>.
+
 AVAILABILITY
     The latest version of this module is available from the Comprehensive
     Perl Archive Network (CPAN). Visit <http://www.perl.com/CPAN/> to find a
-    CPAN site near you. Or see
+    CPAN site near you, or see
     <http://search.cpan.org/dist/Class-Accessor-Installer/>.
 
-AUTHORS
-    Marcel Grünauer, "<marcel@cpan.org>"
+    The development version lives at
+    <http://github.com/hanekomu/Class-Accessor-Installer/>. Instead of
+    sending patches, please fork this project using the standard git and
+    github infrastructure.
 
-    Florian Helmberger, "<florian@cpan.org>"
+AUTHORS
+      Marcel Gruenauer <marcel@cpan.org>
+      Florian Helmberger <florian@cpan.org>
 
 COPYRIGHT AND LICENSE
-    Copyright 2007-2009 by the authors.
+    This software is copyright (c) 2007 by Marcel Gruenauer.
 
-    This library is free software; you can redistribute it and/or modify it
-    under the same terms as Perl itself.
+    This is free software; you can redistribute it and/or modify it under
+    the same terms as the Perl 5 programming language system itself.
 

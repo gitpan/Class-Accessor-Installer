@@ -1,5 +1,8 @@
 Revision history for Perl extension Class-Accessor-Installer
 
+1.100820  2010-03-23 18:13:50 Europe/Vienna
+    - converted distribution to Dist::Zilla-style
+
 0.09 Wed 2010.02.10 14:34:59 CET (Marcel Gruenauer <marcel@cpan.org>)
      - removed optional but - after the Vim::Tag rewrite unnecessary - Vim::Tag
        dependency, thereby also removing the circular dependency of Vim::Tag ->
