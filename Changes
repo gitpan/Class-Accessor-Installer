@@ -1,5 +1,11 @@
 Revision history for Perl extension Class-Accessor-Installer
 
+1.100880  2010-03-29 19:45:57 Europe/Vienna
+    - refactored document_accessor() out of install_accessor()
+    - made it to work with Sub::Documentation
+    - dropped support for Pod::Generated
+    - added documentation
+
 1.100820  2010-03-23 18:13:50 Europe/Vienna
     - converted distribution to Dist::Zilla-style
 

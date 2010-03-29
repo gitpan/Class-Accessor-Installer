@@ -5,7 +5,7 @@ use Test::More tests => 3;
 
 # taken from Class::Accessor::Complex
 package Foo;
-use base qw(Class::Accessor::Installer);
+use parent qw(Class::Accessor::Installer);
 
 sub mk_new {
     my ($self, @args) = @_;
@@ -84,7 +84,7 @@ EODOC
 }
 
 package Test01;
-use base 'Foo';
+use parent -norequire, 'Foo';
 __PACKAGE__->mk_new->mk_scalar_accessors(qw(name));
 
 package main;

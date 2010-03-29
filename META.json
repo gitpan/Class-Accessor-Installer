@@ -9,7 +9,7 @@
       "version" : 1.4,
       "url" : "http://module-build.sourceforge.net/META-spec-v1.4.html"
    },
-   "version" : "1.100820",
+   "version" : "1.100880",
    "name" : "Class-Accessor-Installer",
    "author" : [
       "Marcel Gruenauer <marcel@cpan.org>",
@@ -19,7 +19,7 @@
    "build_requires" : {},
    "provides" : {
       "Class::Accessor::Installer" : {
-         "version" : "1.100820",
+         "version" : "1.100880",
          "file" : "lib/Class/Accessor/Installer.pm"
       }
    },
@@ -27,6 +27,7 @@
       "Test::More" : "0.88",
       "perl" : "5.006",
       "Scalar::Util" : "0",
+      "parent" : "0",
       "English" : "0",
       "File::Find" : "0",
       "File::Temp" : "0",

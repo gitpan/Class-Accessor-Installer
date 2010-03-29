@@ -3,16 +3,17 @@ use warnings;
 use strict;
 
 package Class::Accessor::Installer;
-our $VERSION = '1.100820';
+our $VERSION = '1.100880';
+
 # ABSTRACT: Install an accessor subroutine
 use Sub::Name;
 use UNIVERSAL::require;
 
 sub install_accessor {
     my ($self, %args) = @_;
-    my ($pkg, $name, $code) = @args{qw/pkg name code/};
-    unless (defined $pkg) {
-        $pkg = ref $self || $self;
+    my ($package, $name, $code) = @args{qw(package name code)};
+    unless (defined $package) {
+        $package = ref $self || $self;
     }
     $name = [$name] unless ref $name eq 'ARRAY';
     my @caller;
@@ -24,21 +25,33 @@ sub install_accessor {
     for my $sub (@$name) {
         no strict 'refs';
         $::PTAGS && $::PTAGS->add_tag($sub, $caller[1], $caller[2]);
-        *{"${pkg}::${sub}"} = subname "${pkg}::${sub}" => $code;
-        for my $doc_type (qw(purpose example)) {
-            next unless defined $args{$doc_type};
+        *{"${package}::${sub}"} = subname "${package}::${sub}" => $code;
+    }
+}
 
-            # don't use() it - this installer should still work if we don't
-            # have Pod::Generated
-            Pod::Generated->require;
-            next if $@;
-            my $spec = $args{$doc_type};
-            $spec = [$spec] unless ref $spec eq 'ARRAY';
-            for my $doc_el (@$spec) {
-                $doc_el =~ s/^\s*|\s*$//sg;
-                Pod::Generated::add_doc($pkg, 'CODE', $sub, $doc_type, $doc_el);
-            }
-        }
+sub document_accessor {
+    my ($self, %args) = @_;
+
+    # Don't use() it - this should still work if we don't have
+    # Sub::Documentation.
+    Sub::Documentation->require;
+    return if $@;
+    my $package = delete $args{package};
+    unless (defined $package) {
+        $package = ref $self || $self;
+    }
+    my $name = delete $args{name};
+    $name = [$name] unless ref $name eq 'ARRAY';
+    my $belongs_to = delete $args{belongs_to};
+    while (my ($type, $documentation) = each %args) {
+        Sub::Documentation::add_documentation(
+            package       => $package,
+            name          => $name,
+            glob_type     => 'CODE',
+            type          => $type,
+            documentation => $documentation,
+            ($belongs_to ? (belongs_to => $belongs_to) : ()),
+        );
     }
 }
 1;
@@ -53,7 +66,7 @@ Class::Accessor::Installer - Install an accessor subroutine
 
 =head1 VERSION
 
-version 1.100820
+version 1.100880
 
 =head1 SYNOPSIS
 
@@ -69,20 +82,26 @@ version 1.100820
             $self->install_accessor(
                 sub     => "${field}_foo",
                 code    => sub { rand() },
-                purpose => 'Does this, that and the other',
-                example => [
-                    "my \$result = $class->${field}_foo(\$value)",
-                    "my \$result = $class->${field}_foo(\$value, \$value2)",
-                ]
             );
         }
+
+        my $field = '...';
+        $self->document_accessor(
+            name     => "${field}_foo",
+            purpose  => 'Does this, that and the other',
+            examples => [
+                "my \$result = $class->${field}_foo(\$value)",
+                "my \$result = $class->${field}_foo(\$value, \$value2)",
+            ],
+            belongs_to => 'foo',
+        );
     }
 
 =head1 DESCRIPTION
 
-This mixin class provides a method that will install a coderef. There are
-other modules that do this, but this one is a bit more specific to the needs
-of L<Class::Accessor::Complex> and friends.
+This mixin class provides a method that will install a code reference. There
+are other modules that do this, but this one is a bit more specific to the
+needs of L<Class::Accessor::Complex> and friends.
 
 It is intended as a mixin, that is, your accessor-generating class should
 inherit from this class.
@@ -95,7 +114,7 @@ Takes as arguments a named hash. The following keys are recognized:
 
 =over 4
 
-=item C<pkg>
+=item C<package>
 
 The package into which to install the subroutine. If this argument is omitted,
 it will inspect C<$self> to determine the package. Class::Accessor::*
@@ -130,18 +149,6 @@ An example of this usage would be:
 
 This is the code reference that should be installed.
 
-=item C<purpose>
-
-A string describing the generated method. This information can be used by
-L<Pod::Generated> to automatically generate pod documentation during C<make>
-time.
-
-=item C<example>
-
-One or more examples of using the method. These will also be used in the
-generated documentation. The value can be a string or an reference to an array
-of strings.
-
 =back
 
 The installed subroutine is named using L<Sub::Name>, so it shows up with a
@@ -159,6 +166,43 @@ therefore want to use the following lines at the beginning of your subroutine:
 
 Now the subroutine will be named both in a stack trace and inside the
 debugger.
+
+=head2 document_accessor
+
+Adds documentation for an accessor - not necessarily one that has been
+generated with C<install_accessor()>. See L<Sub::Documentation> for details.
+
+Takes as arguments a named hash. The following keys are recognized:
+
+=over 4
+
+=item C<package>
+
+Like the C<package> argument of C<install_accessor()>.
+
+=item C<name>
+
+The name of the accessor being documented. This can be a string or a reference
+to an array of strings, if the same documentation applies to more than one
+method. This can occur, for example, when there are aliases for a method such
+as C<clear_foo()> and C<foo_clear()>.
+
+=item C<purpose>
+
+A string describing the generated method.
+
+=item C<examples>
+
+An array reference containing one or more examples of using the method. These
+will also be used in the generated documentation.
+
+=back
+
+You can pass additional arbitrary key/value pairs; they will be stored as
+well. It depends on your documentation tool which keys are useful. For
+example, L<Class::Accessor::Complex> generates and
+L<Pod::Weaver::Section::CollectWithAutoDoc> supports a C<belongs_to> key that
+shows which generated helper method belongs to which main accessor.
 
 =head1 INSTALLATION
 
